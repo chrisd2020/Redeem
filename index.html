@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Redeem Xbox Game Pass</title>
+
+<style>
+  :root {
+    --xbox-green: #107c10;
+    --bg: #0e0e0e;
+    --card: #1f1f1f;
+    --card-alt: #2a2a2a;
+    --text-main: #ffffff;
+    --text-muted: #b9b9b9;
+    --focus: #6bbf6b;
+  }
+
+  * {
+    box-sizing: border-box;
+    font-family:
+      "Segoe UI Variable",
+      "Segoe UI",
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      sans-serif;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--card);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .accent {
+    height: 4px;
+    background: var(--xbox-green);
+  }
+
+  .content {
+    padding: 28px 24px 32px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .logo svg {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+
+  .title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 26px;
+  }
+
+  .code {
+    background: #000;
+    border-radius: 4px;
+    padding: 18px 12px;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-align: center;
+    margin-bottom: 24px;
+    user-select: all;
+  }
+
+  button {
+    width: 100%;
+    border: none;
+    border-radius: 4px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.75s ease;
+  }
+
+  button:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .copy {
+    background: var(--card-alt);
+    color: var(--text-main);
+    margin-bottom: 12px;
+  }
+
+  .copy:hover {
+    background: #333;
+  }
+
+  .redeem {
+    background: var(--xbox-green);
+    color: #fff;
+  }
+
+  .redeem:hover {
+    background: #0c6b0c;
+  }
+
+  .status {
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--focus);
+    display: none;
+  }
+
+  .hint {
+    margin-top: 22px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .xbox-logo {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .copy.copied {
+    background: var(--xbox-green);
+    }
+
+</style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="accent"></div>
+    <div class="content">
+      <div class="logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg"
+            alt="Xbox"
+            class="xbox-logo" />
+      </div>
+      <div class="title">Happy Birthday Luke!</div>
+      <div class="subtitle">Xbox Game Pass PC (3 months)</div>
+
+      <div class="code" id="code"></div>
+
+      <button class="copy" onclick="copyCode()">Copy code</button>
+      <button class="redeem" onclick="redeem()">Redeem code</button>
+
+    </div>
+  </div>
+
+  <script>
+    // Read ?code= from query string
+    const params = new URLSearchParams(window.location.search);
+    const codeFromUrl = params.get("code");
+  
+    if (codeFromUrl) {
+      // Normalise spacing just in case
+      document.getElementById("code").innerText =
+        codeFromUrl.trim().toUpperCase();
+    }
+  
+    function copyCode() {
+      const code = document.getElementById("code").innerText.trim();
+      const button = document.querySelector(".copy");
+  
+      if (!code) return;
+  
+      navigator.clipboard.writeText(code).then(() => {
+        const originalText = button.innerText;
+  
+        button.innerText = "Copied";
+        button.disabled = true;
+        button.classList.add("copied");
+  
+        setTimeout(() => {
+          button.innerText = originalText;
+          button.disabled = false;
+          button.classList.remove("copied");
+        }, 3000);
+      });
+    }
+  
+    function redeem() {
+      window.location.href = "https://redeem.microsoft.com";
+    }
+  </script>
+  
+
+</body>
+</html>
