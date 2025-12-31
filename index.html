@@ -16,146 +16,23 @@
     --focus: #6bbf6b;
   }
 
-  * {
-    box-sizing: border-box;
-    font-family:
-      "Segoe UI Variable",
-      "Segoe UI",
-      system-ui,
-      -apple-system,
-      BlinkMacSystemFont,
-      sans-serif;
-  }
-
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text-main);
-    min-height: 100vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 20px;
-  }
-
-  .card {
-    width: 100%;
-    max-width: 420px;
-    background: var(--card);
-    border-radius: 6px;
-    margin-top: 25px;
-    overflow: hidden;
-  }
-
-  .accent {
-    height: 4px;
-    background: var(--xbox-green);
-  }
-
-  .content {
-    padding: 28px 24px 32px;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-
-  .logo svg {
-    width: 32px;
-    height: 32px;
-    flex-shrink: 0;
-  }
-
-  .logo-text {
-    font-size: 20px;
-    font-weight: 600;
-    letter-spacing: 0.2px;
-  }
-
-  .title {
-    font-size: 22px;
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
-
-  .subtitle {
-    font-size: 14px;
-    color: var(--text-muted);
-    margin-bottom: 26px;
-  }
-
-  .code {
-    background: #000;
-    border-radius: 4px;
-    padding: 18px 12px;
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: 2.5px;
-    text-align: center;
-    margin-bottom: 24px;
-    user-select: all;
-  }
-
-  button {
-    width: 100%;
-    border: none;
-    border-radius: 4px;
-    padding: 14px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.75s ease;
-  }
-
-  button:focus-visible {
-    outline: 2px solid var(--focus);
-    outline-offset: 2px;
-  }
-
-  .copy {
-    background: var(--card-alt);
-    color: var(--text-main);
-    margin-bottom: 12px;
-  }
-
-  .copy:hover {
-    background: #333;
-  }
-
-  .redeem {
-    background: var(--xbox-green);
-    color: #fff;
-  }
-
-  .redeem:hover {
-    background: #0c6b0c;
-  }
-
-  .status {
-    margin-top: 16px;
-    font-size: 13px;
-    color: var(--focus);
-    display: none;
-  }
-
-  .hint {
-    margin-top: 22px;
-    font-size: 13px;
-    color: var(--text-muted);
-  }
-
-  .xbox-logo {
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .copy.copied {
-    background: var(--xbox-green);
-    }
-
+  * { box-sizing: border-box; font-family: "Segoe UI Variable","Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,sans-serif; }
+  body { margin:0; background: var(--bg); color: var(--text-main); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;}
+  .card { width:100%; max-width:420px; background:var(--card); border-radius:6px; overflow:hidden;}
+  .accent { height:4px; background:var(--xbox-green);}
+  .content { padding:28px 24px 32px; text-align:center;}
+  .logo { margin-bottom:24px;}
+  .logo img { width:32px; height:32px; }
+  .title { font-size:22px; font-weight:600; margin-bottom:6px;}
+  .subtitle { font-size:14px; color:var(--text-muted); margin-bottom:26px;}
+  .code { background:#000; border-radius:4px; padding:18px 12px; font-size:22px; font-weight:600; letter-spacing:2.5px; text-align:center; margin-bottom:24px; user-select:all;}
+  button { width:100%; border:none; border-radius:4px; padding:14px; font-size:15px; font-weight:600; cursor:pointer; transition:background 0.75s ease;}
+  .copy { background:var(--card-alt); color:var(--text-main); margin-bottom:12px;}
+  .copy:hover { background:#333;}
+  .redeem { background:var(--xbox-green); color:#fff;}
+  .redeem:hover { background:#0c6b0c;}
+  .copy.copied { background:var(--xbox-green);}
+  .message { font-size:16px; color:var(--focus); margin-bottom:24px; line-height: 150%;}
 </style>
 </head>
 
@@ -164,41 +41,58 @@
     <div class="accent"></div>
     <div class="content">
       <div class="logo">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg"
-            alt="Xbox"
-            class="xbox-logo" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg" alt="Xbox" class="xbox-logo"/>
       </div>
+
       <div class="title">Happy Birthday Luke!</div>
       <div class="subtitle">Xbox Game Pass PC (3 months)</div>
+
+      <div class="message" id="message"></div>
 
       <div class="code" id="code"></div>
 
       <button class="copy" onclick="copyCode()">Copy code</button>
       <button class="redeem" onclick="redeem()">Redeem code</button>
-
     </div>
   </div>
 
   <script>
-    // Read ?code= from query string
+    const totalCodes = 3;
     const params = new URLSearchParams(window.location.search);
-    const codeFromUrl = params.get("code");
+    const codeFromUrl = params.get("code")?.trim().toUpperCase();
   
-    if (codeFromUrl) {
-      // Normalise spacing just in case
-      document.getElementById("code").innerText =
-        codeFromUrl.trim().toUpperCase();
+    // Load scanned codes from localStorage (array)
+    const scannedCodes = JSON.parse(localStorage.getItem("scannedCodes") || "[]");
+  
+    if (codeFromUrl && !scannedCodes.includes(codeFromUrl)) {
+      scannedCodes.push(codeFromUrl);
+      localStorage.setItem("scannedCodes", JSON.stringify(scannedCodes));
+    }
+  
+    // Update code display
+    document.getElementById("code").innerText = codeFromUrl || "No code found";
+  
+    // Map numbers to words
+    const numberWords = ["ZERO","ONE","TWO","THREE"];
+    const scannedCount = Math.min(scannedCodes.length, 3);
+    const remaining = totalCodes - scannedCount;
+    const messageEl = document.getElementById("message");
+  
+    if (scannedCount === totalCodes) {
+      messageEl.innerHTML = "Yay, you've found all the QR codes!<br>Happy Birthday!";
+    } else if (codeFromUrl) {
+      messageEl.innerHTML = `Yay, you've found <strong>${numberWords[scannedCount]}</strong> of <strong>${numberWords[totalCodes]}</strong> QR codes!<br>Look around to find the other <strong>${numberWords[remaining]}</strong>!`;
+    } else {
+      messageEl.innerText = "No code detected in the URL.";
     }
   
     function copyCode() {
       const code = document.getElementById("code").innerText.trim();
       const button = document.querySelector(".copy");
-  
       if (!code) return;
   
       navigator.clipboard.writeText(code).then(() => {
         const originalText = button.innerText;
-  
         button.innerText = "Copied";
         button.disabled = true;
         button.classList.add("copied");
@@ -214,8 +108,6 @@
     function redeem() {
       window.open("https://account.microsoft.com/billing/redeem");
     }
-  </script>
-  
-
+  </script>  
 </body>
 </html>
