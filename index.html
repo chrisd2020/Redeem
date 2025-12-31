@@ -32,7 +32,7 @@
   .redeem { background:var(--xbox-green); color:#fff;}
   .redeem:hover { background:#0c6b0c;}
   .copy.copied { background:var(--xbox-green);}
-  .message { font-size:16px; color:var(--focus); margin-bottom:24px; line-height: 150%;}
+  .message { font-size:16px; color:var(--focus); margin-bottom:24px; line-height: 200%;}
 </style>
 </head>
 
@@ -81,7 +81,7 @@
     if (scannedCount === totalCodes) {
       messageEl.innerHTML = "Yay, you've found all the QR codes!<br>Happy Birthday!";
     } else if (codeFromUrl) {
-      messageEl.innerHTML = `Yay, you've found <strong>${numberWords[scannedCount]}</strong> of <strong>${numberWords[totalCodes]}</strong> QR codes!<br>Look around to find the other <strong>${numberWords[remaining]}</strong>!`;
+      messageEl.innerHTML = `Yay, you've found...<br><strong>${numberWords[scannedCount]}</strong> of <strong>${numberWords[totalCodes]}</strong> QR codes!<br>Look around to find the other <strong>${numberWords[remaining]}</strong>!`;
     } else {
       messageEl.innerText = "No code detected in the URL.";
     }
